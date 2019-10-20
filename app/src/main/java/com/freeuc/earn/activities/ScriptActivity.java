@@ -20,43 +20,46 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class ScriptActivity extends BaseActivity implements OnScriptItemClickListener {
+public class ScriptActivity extends BaseActivity implements View.OnClickListener {
     ScriptAdapter adapter;
     RecyclerView recyclerView;
     ArrayList<Script> scripts;
+    String downloadLink="kd";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_script);
-        scripts = new ArrayList<>();
-        scripts.add(new Script("Wall Hacks",5,"https://wallhack.com"));
-        scripts.add(new Script("God Mod",200,"https://godmod.com"));
-        adapter = new ScriptAdapter(scripts,this);
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+        findViewById(R.id.btn_pay).setOnClickListener(this);
+
+//        scripts = new ArrayList<>();
+//        scripts.add(new Script("Wall Hacks",5,"https://wallhack.com"));
+//        scripts.add(new Script("God Mod",200,"https://godmod.com"));
+//        adapter = new ScriptAdapter(scripts,this);
+//        recyclerView = findViewById(R.id.recyclerView);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setAdapter(adapter);
     }
 
     @Override
-    public void onClick(Script script) {
+    public void onClick(View view) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this)
                 .setTitle("Buy Hacking Script")
                 .setMessage("After payment, you will receive a Download link with Instructions. Click Confirm to Pay.")
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if(deposit<script.getAmount()){
+                        if(deposit<289){
                             Snackbar.make(recyclerView,"Deposit Balance Insufficient.",Snackbar.LENGTH_LONG).show();
                             dialogInterface.dismiss();
                             return;
                         }
-                        addDeposit(-script.getAmount());
-                        Snackbar.make(recyclerView,"Download Link: "+script.getLink(),Snackbar.LENGTH_INDEFINITE).setAction("Copy", new View.OnClickListener() {
+                        addDeposit(-289);
+                        Snackbar.make(recyclerView,"Download Link: "+downloadLink,Snackbar.LENGTH_INDEFINITE).setAction("Copy", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText("Download Link", script.getLink());
+                                ClipData clip = ClipData.newPlainText("Download Link",downloadLink);
                                 clipboard.setPrimaryClip(clip);
                             }
                         }).show();
