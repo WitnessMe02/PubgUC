@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ import com.freeuc.earn.R;
 import com.freeuc.earn.models.WithdrawRequest;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.parse.ConfigCallback;
+import com.parse.ParseConfig;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
@@ -28,12 +31,28 @@ public class WithdrawActivity extends BaseActivity {
 
     private TextInputEditText pubgID;
     private long amount;
+    private int minimiumAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_withdraw);
         pubgID = findViewById(R.id.pubg_id);
+
+        ParseConfig.getInBackground(new ConfigCallback() {
+            @Override
+            public void done(ParseConfig config, ParseException e) {
+                if (e == null) {
+                    Log.d("TAG", "Yay! Config was fetched from the server.");
+                } else {
+                    Log.e("TAG", "Failed to fetch. Using Cached Config.");
+                    config = ParseConfig.getCurrentConfig();
+                }
+                // Get the message from config or fallback to default value
+                minimiumAmount = config.getInt("MinimumWithdrawAmount");
+//                Log.d("TAG", String.format("Welcome Messsage From Config = %s", welcomeMessage));
+            }
+        });
 
         findViewById(R.id.btn_withdraw).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,8 +64,8 @@ public class WithdrawActivity extends BaseActivity {
                 }
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 amount=0;
-                if(winning<200){
-                    Snackbar.make(v,"Minimum 200 UC required for withdrawal.", Snackbar.LENGTH_LONG).show();
+                if(winning<minimiumAmount){
+                    Snackbar.make(v,"Withdrawal Amount Insufficient", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 else {
