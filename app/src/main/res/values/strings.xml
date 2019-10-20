@@ -1,0 +1,79 @@
+<resources>
+    <array name="rainbow">
+        <item>@color/wheel_2</item>
+        <item>@color/wheel_3</item>
+        <item>@color/wheel_4</item>
+        <item>@color/wheel_6</item>
+        <item>@color/wheel_7</item>
+        <item>@color/wheel_11</item>
+    </array>
+    <string name="app_name">Pubg UC</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="Open">open</string>
+
+    <!--    Login and Sign up -->
+    <string name="Close">close</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="email">Email Id</string>
+    <string name="passowrd">Password</string>
+    <string name="login">LOGIN</string>
+    <string name="show_pwd">Show Password</string>
+    <string name="hide_pwd">Hide Password</string>
+    <string name="forgot">Forgot password?</string>
+    <string name="closebutton">Close Button for Activity</string>
+    <string name="newUser">Not a Member yet? Sign Up here.</string>
+    <string name="fullName">Full Name</string>
+    <string name="mobileNumber">Mobile Number</string>
+    <string name="location">Location</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="terms_conditions">By clicking SignUp you agree all the Terms and Conditions.</string>
+    <string name="signUp">SIGN UP</string>
+    <string name="already_user">Already have Account? Login here.</string>
+    <string name="registered_emailid">Please enter your Registered Email Id below:</string>
+    <string name="submit">SUBMIT</string>
+
+    <!--    Spin wheel-->
+    <string name="back">BACK</string>
+
+    <string-array name="wheel_colors">
+        <item>@color/wheel_1</item>
+        <item>@color/wheel_2</item>
+        <item>@color/wheel_3</item>
+        <item>@color/wheel_4</item>
+        <item>@color/wheel_5</item>
+        <item>@color/wheel_6</item>
+        <item>@color/wheel_7</item>
+        <item>@color/wheel_8</item>
+        <item>@color/wheel_9</item>
+        <item>@color/wheel_10</item>
+        <item>@color/wheel_11</item>
+        <item>@color/wheel_12</item>
+    </string-array>
+
+    <string-array name="wheel_items">
+        <item>06</item>
+        <item>40</item>
+        <item>45</item>
+        <item>8</item>
+        <item>50</item>
+        <item>60</item>
+        <item>2</item>
+        <item>10</item>
+        <item>20</item>
+        <item>4</item>
+        <item>25</item>
+        <item>30</item>
+    </string-array>
+</resources>
