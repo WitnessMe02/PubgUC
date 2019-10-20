@@ -193,15 +193,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/i4" />
-        <ImageView
-            android:id="@+id/i6"
-            android:layout_width="365dp"
-            android:layout_height="192dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/i6"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/i5" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
