@@ -9,7 +9,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.freeuc.earn.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.os.PersistableBundle;
@@ -30,6 +29,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -66,6 +66,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(this);
+        View hView =  navigationView.inflateHeaderView(R.layout.nav_header_main);
+        ImageView imgvw = (ImageView)hView.findViewById(R.id.imageView);
+        TextView tv = (TextView)hView.findViewById(R.id.textView);
+//        imgvw.setImageResource(R.id.imgLogo);
+        tv.setText(user.getEmail());
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 //        mAppBarConfiguration = new AppBarConfiguration.Builder(

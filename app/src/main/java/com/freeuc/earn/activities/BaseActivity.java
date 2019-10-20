@@ -8,7 +8,7 @@ import com.parse.ParseUser;
 public class BaseActivity extends AppCompatActivity {
     public static int deposit;
     public static int winning;
-    private ParseUser user;
+    public ParseUser user;
     BaseActivity() {
         user = ParseUser.getCurrentUser();
         try {
