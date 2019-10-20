@@ -16,11 +16,14 @@ import com.freeuc.earn.R;
 //import com.google.firebase.storage.FirebaseStorage;
 //import com.google.firebase.storage.StorageReference;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class ContentActivity extends AppCompatActivity {
 
@@ -50,38 +53,31 @@ public class ContentActivity extends AppCompatActivity {
         progress.setCancelable(false);
         progress.show();
 
-//        StorageReference islandRef = storageRef.child(fileName);
-        final long ONE_MEGABYTE = 1024 * 1024;
-        File localFile = null;
+        BufferedReader reader = null;
         try {
-            localFile = File.createTempFile(name,"txt");
+            assert fileName != null;
+            reader = new BufferedReader(
+                    new InputStreamReader(getAssets().open(fileName), StandardCharsets.UTF_8));
+
+            // do reading, usually loop until end of file reading
+            StringBuilder text= new StringBuilder();
+            String mLine;
+            while ((mLine = reader.readLine()) != null) {
+                //process line
+                text.append(mLine);
+            }
+            txtView.setText(text.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            //log the exception
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    //log the exception
+                }
+            }
         }
-        final File finalLocalFile = localFile;
-//        islandRef.getFile(localFile).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                InputStream inputStream = null;
-//                try {
-//                    inputStream = new FileInputStream(finalLocalFile);
-//                    int i;
-//                    i = inputStream.read();
-//                    while (i != -1)
-//                    {
-//                        byteArrayOutputStream.write(i);
-//                        i = inputStream.read();
-//                    }
-//                    inputStream.close();
-//                } catch (IOException e) {
-//                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                }
-//                txtView.setText(byteArrayOutputStream.toString());
-//                progress.dismiss();
-//            }
-//        });
 
     }
 
