@@ -13,7 +13,6 @@
         android:background="@color/colorPrimary"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -108,57 +107,30 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/label"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:padding="10dp"
-        android:text="Minimum withdraw amount is 200 UC"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/pubg_id"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wallet_panel" />
-
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/pubg_id"
         android:layout_width="251dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:hint="Enter the Pubg ID:"
+        android:layout_marginTop="20dp"
         android:inputType="phone"
         app:layout_constraintBottom_toTopOf="@+id/btn_withdraw"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label" />
+        app:layout_constraintTop_toBottomOf="@+id/wallet_panel" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_withdraw"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
         android:padding="10dp"
         android:text="Withdraw"
         app:cornerRadius="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/label2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pubg_id" />
-
-    <TextView
-        android:id="@+id/label2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginEnd="36dp"
-        android:padding="10dp"
-        android:text="UCs will be transferred within 4-5 business days."
-        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_withdraw" />
+        app:layout_constraintTop_toBottomOf="@+id/pubg_id" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
