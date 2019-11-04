@@ -16,5 +16,6 @@ public class PubgUC extends Application {
       .server("https://parseapi.back4app.com")
       .build()
     );
+    StaticData.refreshConfig();
   }
 }

@@ -23,6 +23,7 @@ import com.parse.SaveCallback;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -39,20 +40,7 @@ public class WithdrawActivity extends BaseActivity {
         setContentView(R.layout.activity_withdraw);
         pubgID = findViewById(R.id.pubg_id);
 
-        ParseConfig.getInBackground(new ConfigCallback() {
-            @Override
-            public void done(ParseConfig config, ParseException e) {
-                if (e == null) {
-                    Log.d("TAG", "Yay! Config was fetched from the server.");
-                } else {
-                    Log.e("TAG", "Failed to fetch. Using Cached Config.");
-                    config = ParseConfig.getCurrentConfig();
-                }
-                // Get the message from config or fallback to default value
-                minimiumAmount = config.getInt("MinimumWithdrawAmount");
-//                Log.d("TAG", String.format("Welcome Messsage From Config = %s", welcomeMessage));
-            }
-        });
+        minimiumAmount = ParseConfig.getCurrentConfig().getInt("MinimumWithdrawAmount");
 
         findViewById(R.id.btn_withdraw).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +75,7 @@ public class WithdrawActivity extends BaseActivity {
                     entity.put("PubgID", withdrawRequest.getPubgID());
                     entity.put("amount", amount);
                     entity.put("email", withdrawRequest.getEmail());
-                    Date date = entity.getCreatedAt();
+                    Date date = Calendar.getInstance().getTime();
                     DateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm:ss z");
                     formatter.setTimeZone(TimeZone.getTimeZone("IST"));
                     entity.put("time",formatter.format(date));

@@ -46,12 +46,12 @@ public class ContentActivity extends AppCompatActivity {
 //        storage = FirebaseStorage.getInstance();
 //        storageRef = storage.getReference();
 
-        final ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Please Wait...");
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setIndeterminate(true);
-        progress.setCancelable(false);
-        progress.show();
+//        final ProgressDialog progress = new ProgressDialog(this);
+//        progress.setMessage("Please Wait...");
+//        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progress.setIndeterminate(true);
+//        progress.setCancelable(false);
+//        progress.show();
 
         BufferedReader reader = null;
         try {

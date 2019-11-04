@@ -14,10 +14,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.freeuc.earn.JSONParser;
 import com.freeuc.earn.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.parse.ParseConfig;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
+import com.paytm.pgsdk.PaytmOrder;
+import com.paytm.pgsdk.PaytmPGService;
+import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
 
 import org.json.JSONException;
@@ -25,12 +33,17 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddMoneyActivity extends AppCompatActivity {  //implements PaytmPaymentTransactionCallback
+public class AddMoneyActivity extends BaseActivity  implements PaytmPaymentTransactionCallback {
 
     private long deposits;
     //    private DatabaseReference depositsRef;
@@ -45,18 +58,20 @@ public class AddMoneyActivity extends AppCompatActivity {  //implements PaytmPay
     //    private DatabaseReference orderReference;
     private String payment_gateway;
     //    private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
-    private int amount;
+    private ParseObject entity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_money);
 //        user = FirebaseAuth.getInstance().getCurrentUser();
-//        custid = user.getEmail();
+        custid = user.getObjectId();
+        mid = ParseConfig.getCurrentConfig().getString("MerchantID");
 //        depositsRef = FirebaseDatabase.getInstance().getReference("/users/"+user.getEmail()+"/Wallet/deposits");
         editAmount = findViewById(R.id.edit_amount);
         mobile_et = findViewById(R.id.edit_phone);
         mobile_til = findViewById(R.id.phoneInputLayout);
+
         findViewById(R.id.amount_50).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,12 +102,17 @@ public class AddMoneyActivity extends AppCompatActivity {  //implements PaytmPay
                     Snackbar.make(v, "Minimum deposit limit is \u0B2920 ", Snackbar.LENGTH_SHORT).show();
                     return;
                 }
+                entity = new ParseObject("Payments");
+                orderId = UUID.randomUUID().toString().split("-")[0];
+                System.out.println("Chutiya "+orderId);
+
+                PaytmPaymentGateway dl = new PaytmPaymentGateway(amount);
+                dl.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 //                orderReference= FirebaseDatabase.getInstance().getReference("/Orders").push();
-//                orderId = orderReference.getKey();
+//
 //                if(payment_gateway.compareTo("paytm")==0){
-//                    PaytmPaymentGateway dl = new PaytmPaymentGateway(amount);
-//                    dl.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//
 //                }
 //                else if(payment_gateway.compareTo("payumoney")==0){
 //                    findViewById(R.id.btn_deposit).setEnabled(false);
@@ -110,120 +130,137 @@ public class AddMoneyActivity extends AppCompatActivity {  //implements PaytmPay
 //                    launchPayUMoneyFlow(amount);
             }
         });
-        loadData();
+        refreshWalletUI();
+//        loadData();
 
     }
 
-//    public class PaytmPaymentGateway extends AsyncTask<ArrayList<String>, Void, String> {
-//        private ProgressDialog dialog = new ProgressDialog(AddMoneyActivity.this);
-//        //private String orderId , mid, custid, amt;
-//        String url ="https://earning-star-paytm.000webhostapp.com/generateChecksum.php";
-//        String verifyurl = "https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";
-//        // "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID"+orderId;
-//        String CHECKSUMHASH ="";
-//        private int amount;
-//
-//        public PaytmPaymentGateway(int amount) {
-//            this.amount = amount;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            this.dialog.setMessage("Please wait");
-//            this.dialog.show();
-//        }
-//        protected String doInBackground(ArrayList<String>... alldata) {
-//            JSONParser jsonParser = new JSONParser(AddMoneyActivity.this);
-//            String param=
-//                    "&MID="+mid+
-//                            "&ORDER_ID=" + orderId+
-//                            "&CUST_ID="+custid+
-//                            "&CHANNEL_ID=WAP&TXN_AMOUNT="+amount+"&WEBSITE=WEBSTAGING"+
-//                            "&CALLBACK_URL="+ verifyurl+"&INDUSTRY_TYPE_ID=Retail";
-//            JSONObject jsonObject = jsonParser.makeHttpRequest(url,"POST",param);
-//            // yaha per checksum ke saht order id or status receive hoga..
-//            Log.e("CheckSum result >>",jsonObject.toString());
-//            if(jsonObject != null){
-//                Log.e("CheckSum result >>",jsonObject.toString());
-//                try {
-//                    CHECKSUMHASH=jsonObject.has("CHECKSUMHASH")?jsonObject.getString("CHECKSUMHASH"):"";
-//                    Log.e("CheckSum result >>",CHECKSUMHASH);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            return CHECKSUMHASH;
-//        }
-//        @Override
-//        protected void onPostExecute(String result) {
-//            Log.e(" setup acc ","  signup result  " + result);
-//            if (dialog.isShowing()) {
-//                dialog.dismiss();
-//            }
-//           // PaytmPGService Service = PaytmPGService.getStagingService();
-//            // when app is ready to publish use production service
-//           PaytmPGService  Service = PaytmPGService.getProductionService();
-//            // now call paytm service here
-//            //below parameter map is required to construct PaytmOrder object, Merchant should replace below map values with his own values
-//            HashMap<String, String> paramMap = new HashMap<String, String>();
-//            //these are mandatory parameters
-//            paramMap.put("MID", mid); //MID provided by paytm
-//            paramMap.put("ORDER_ID", orderId);
-//            paramMap.put("CUST_ID", custid);
-//            paramMap.put("CHANNEL_ID", "WAP");
-//            paramMap.put("TXN_AMOUNT", String.valueOf(amount));
-//            paramMap.put("WEBSITE", "WEBSTAGING");
-//            paramMap.put("CALLBACK_URL" ,verifyurl);
-//            //paramMap.put( "EMAIL" , "abc@gmail.com");   // no need
-//            // paramMap.put( "MOBILE_NO" , "9144040888");  // no need
-//            paramMap.put("CHECKSUMHASH" ,CHECKSUMHASH);
-//            //paramMap.put("PAYMENT_TYPE_ID" ,"CC");    // no need
-//            paramMap.put("INDUSTRY_TYPE_ID", "Retail");
-//            PaytmOrder Order = new PaytmOrder(paramMap);
-//            Log.e("checksum ", "param "+ paramMap.toString());
-//            Service.initialize(Order,null);
-//            // start payment service call here
-//            Service.startPaymentTransaction(AddMoneyActivity.this, true, true,
-//                    AddMoneyActivity.this  );
-//        }
-//    }
-//    @Override
-//    public void onTransactionResponse(Bundle bundle) {
-//        Log.e("checksum ", " respon true " + bundle.toString());
-//        if(bundle.getString("STATUS").compareTo("TXN_SUCCESS")==0){
-//            Toast.makeText(this,"Transaction Successful",Toast.LENGTH_SHORT).show();
-//            String checksum = bundle.getString("CHECKSUMHASH");
+    public class PaytmPaymentGateway extends AsyncTask<ArrayList<String>, Void, String> {
+        private ProgressDialog dialog = new ProgressDialog(AddMoneyActivity.this);
+//        private String orderId , mid, custid, amt;
+        String url ="https://pubguc-paytm.000webhostapp.com/generateChecksum.php";
+        String verifyurl = "https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";
+        // "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID"+orderId;
+        String CHECKSUMHASH ="";
+        private int amount;
+
+        public PaytmPaymentGateway(int amount) {
+            this.amount = amount;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            this.dialog.setMessage("Please wait");
+            this.dialog.show();
+        }
+        protected String doInBackground(ArrayList<String>... alldata) {
+            JSONParser jsonParser = new JSONParser(AddMoneyActivity.this);
+            String param=
+                    "&MID="+mid+
+                            "&CUST_ID="+custid+
+                            "&ORDER_ID=" + orderId+
+                            "&INDUSTRY_TYPE_ID=Retail"+
+                            "&CHANNEL_ID=WAP&TXN_AMOUNT="+amount+"&WEBSITE=WEBSTAGING"+
+                            "&CALLBACK_URL="+ verifyurl;
+            System.out.println("Link: "+param);
+            JSONObject jsonObject = jsonParser.makeHttpRequest(url,"POST",param);
+            // yaha per checksum ke saht order id or status receive hoga..
+            Log.e("CheckSum result >>",jsonObject.toString());
+            if(jsonObject != null){
+                Log.e("CheckSum result >>",jsonObject.toString());
+                try {
+                    CHECKSUMHASH=jsonObject.has("CHECKSUMHASH")?jsonObject.getString("CHECKSUMHASH"):"";
+                    Log.e("CheckSum result >>",CHECKSUMHASH);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return CHECKSUMHASH;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            Log.e(" setup acc ","  signup result  " + result);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+           // PaytmPGService Service = PaytmPGService.getStagingService();
+            // when app is ready to publish use production service
+           PaytmPGService Service = PaytmPGService.getProductionService();
+            // now call paytm service here
+            //below parameter map is required to construct PaytmOrder object, Merchant should replace below map values with his own values
+            HashMap<String, String> paramMap = new HashMap<String, String>();
+            //these are mandatory parameters
+            paramMap.put("MID", mid); //MID provided by paytm
+            paramMap.put("ORDER_ID", orderId);
+            paramMap.put("CUST_ID", custid);
+            paramMap.put("CHANNEL_ID", "WAP");
+            paramMap.put("TXN_AMOUNT", String.valueOf(amount));
+            paramMap.put("WEBSITE", "WEBSTAGING");
+            paramMap.put("CALLBACK_URL" ,verifyurl);
+            //paramMap.put( "EMAIL" , "abc@gmail.com");   // no need
+            // paramMap.put( "MOBILE_NO" , "9144040888");  // no need
+            paramMap.put("CHECKSUMHASH" ,CHECKSUMHASH);
+            //paramMap.put("PAYMENT_TYPE_ID" ,"CC");    // no need
+            paramMap.put("INDUSTRY_TYPE_ID", "Retail");
+            PaytmOrder Order = new PaytmOrder(paramMap);
+            Log.e("checksum ", "param "+ paramMap.toString());
+            Service.initialize(Order,null);
+            // start payment service call here
+            Service.startPaymentTransaction(AddMoneyActivity.this, true, true,
+                    AddMoneyActivity.this  );
+        }
+    }
+    @Override
+    public void onTransactionResponse(Bundle bundle) {
+        Log.e("checksum ", " respon true " + bundle.toString());
+        if(bundle.getString("STATUS").compareTo("TXN_SUCCESS")==0){
+            Toast.makeText(this,"Transaction Successful",Toast.LENGTH_SHORT).show();
+            String checksum = bundle.getString("CHECKSUMHASH");
+            int amount = Float.valueOf(bundle.getString("TXNAMOUNT")).intValue();
+            addDeposit(amount);
+            refreshWalletUI();
+            entity.put("CustID", custid);
+            entity.put("amount", amount);
+            entity.put("OrderID", orderId);
+            entity.saveInBackground();
+
+
 //            orderReference.child("order_id").setValue(orderId);
 //            orderReference.child("checksum").setValue(checksum);
-//            depositsRef.setValue(deposits+Float.valueOf(bundle.getString("TXNAMOUNT")).intValue());
-//        }
-//        else{
-//            Toast.makeText(this, "TXN_FAILED", Toast.LENGTH_SHORT).show();
-//        }
-//
-//    }
-//    @Override
-//    public void networkNotAvailable() {
-//    }
-//    @Override
-//    public void clientAuthenticationFailed(String s) {
-//    }
-//    @Override
-//    public void someUIErrorOccurred(String s) {
-//        Log.e("checksum ", " ui fail respon  "+ s );
-//    }
-//    @Override
-//    public void onErrorLoadingWebPage(int i, String s, String s1) {
-//        Log.e("checksum ", " error loading pagerespon true "+ s + "  s1 " + s1);
-//    }
-//    @Override
-//    public void onBackPressedCancelTransaction() {
-//        Log.e("checksum ", " cancel call back respon  " );
-//    }
-//    @Override
-//    public void onTransactionCancel(String s, Bundle bundle) {
-//        Log.e("checksum ", "  transaction cancel " );
-//    }
+//            depositsRef.setValue(deposits+);
+        }
+        else{
+            Toast.makeText(this, "TXN_FAILED", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    @Override
+    public void networkNotAvailable() {
+    }
+    @Override
+    public void clientAuthenticationFailed(String s) {
+    }
+    @Override
+    public void someUIErrorOccurred(String s) {
+        Log.e("checksum ", " ui fail respon  "+ s );
+    }
+    @Override
+    public void onErrorLoadingWebPage(int i, String s, String s1) {
+        Log.e("checksum ", " error loading pagerespon true "+ s + "  s1 " + s1);
+    }
+    @Override
+    public void onBackPressedCancelTransaction() {
+        Log.e("checksum ", " cancel call back respon  " );
+    }
+    @Override
+    public void onTransactionCancel(String s, Bundle bundle) {
+        Log.e("checksum ", "  transaction cancel " );
+    }
+
+    public void refreshWalletUI(){
+        ((TextView) findViewById(R.id.wallet_balance_deposits)).setText("\u20B9 "+getDeposit());
+        ((TextView) findViewById(R.id.wallet_balance_winnings)).setText(getWinning()+" UC");
+    }
 
     public void loadData() {
         final ProgressDialog progress = new ProgressDialog(this);
@@ -231,6 +268,7 @@ public class AddMoneyActivity extends AppCompatActivity {  //implements PaytmPay
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setCancelable(false);
         progress.show();
+
 
 //        DatabaseReference settingsRef = FirebaseDatabase.getInstance().getReference("/Settings");
 //        settingsRef.addValueEventListener(new ValueEventListener() {

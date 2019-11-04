@@ -17,6 +17,7 @@ import com.freeuc.earn.adapters.ScriptAdapter;
 import com.freeuc.earn.listeners.OnScriptItemClickListener;
 import com.freeuc.earn.models.Script;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.ParseConfig;
 
 import java.util.ArrayList;
 
@@ -24,13 +25,14 @@ public class ScriptActivity extends BaseActivity implements View.OnClickListener
     ScriptAdapter adapter;
     RecyclerView recyclerView;
     ArrayList<Script> scripts;
-    String downloadLink="kd";
+    String downloadLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_script);
         findViewById(R.id.btn_pay).setOnClickListener(this);
+        downloadLink = ParseConfig.getCurrentConfig().getString("ScriptURL");
 
 //        scripts = new ArrayList<>();
 //        scripts.add(new Script("Wall Hacks",5,"https://wallhack.com"));
@@ -50,12 +52,12 @@ public class ScriptActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(deposit<289){
-                            Snackbar.make(recyclerView,"Deposit Balance Insufficient.",Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view,"Deposit Balance Insufficient.",Snackbar.LENGTH_LONG).show();
                             dialogInterface.dismiss();
                             return;
                         }
                         addDeposit(-289);
-                        Snackbar.make(recyclerView,"Download Link: "+downloadLink,Snackbar.LENGTH_INDEFINITE).setAction("Copy", new View.OnClickListener() {
+                        Snackbar.make(view,"Download Link: "+downloadLink,Snackbar.LENGTH_INDEFINITE).setAction("Copy", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);

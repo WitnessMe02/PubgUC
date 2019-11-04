@@ -149,6 +149,9 @@ public class SignUpFragment extends Fragment implements OnClickListener {
 		user.setEmail(email);
 		user.put("deposit",0);
 		user.put("winning",0);
+		user.put("rate_us",false);
+		user.put("sub_us",false);
+		user.put("watch_video",false);
 
 		// Other fields can be set just like any other ParseObject,
 		// using the "put" method, like this: user.put("attribute", "its value");

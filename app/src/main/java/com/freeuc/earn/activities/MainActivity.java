@@ -5,10 +5,13 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import com.freeuc.earn.R;
+import com.freeuc.earn.utils.NetworkChangeReceiver;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.os.PersistableBundle;
@@ -39,11 +42,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private DrawerLayout drawer;
     private TextView deposit_tv;
     private TextView winning_tv;
+    private NetworkChangeReceiver broadcastReceiver = new NetworkChangeReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(broadcastReceiver,filter);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,13 +93,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
 //    @Override
 //    public boolean onSupportNavigateUp() {
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -108,7 +109,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         findViewById(R.id.i3).setOnClickListener(this);
         findViewById(R.id.i4).setOnClickListener(this);
         findViewById(R.id.i5).setOnClickListener(this);
-        findViewById(R.id.i6).setOnClickListener(this);
+//        findViewById(R.id.i6).setOnClickListener(this);
     }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -118,21 +119,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 Intent intent = new Intent(MainActivity.this, ContentActivity.class);
                 intent.putExtra("name","Privacy Policy");
                 intent.putExtra("file_name","privacy_policy.txt");
-                startActivity(intent);
-            } else if (id == R.id.terms_and_condition ){
-                Intent intent = new Intent(MainActivity.this,ContentActivity.class);
-                intent.putExtra("name","Terms and Conditions");
-                intent.putExtra("file_name","terms_and_conditions.txt");
-                startActivity(intent);
-            } else if (id == R.id.contact_us){
-                Intent intent = new Intent(MainActivity.this,ContentActivity.class);
-                intent.putExtra("name","Contact us");
-                intent.putExtra("file_name","contact_us.txt");
-                startActivity(intent);
-            } else if (id == R.id.about_us){
-                Intent intent = new Intent(MainActivity.this,ContentActivity.class);
-                intent.putExtra("name","About us");
-                intent.putExtra("file_name","about_us.txt");
                 startActivity(intent);
             }
             else if (id == R.id.exit) {
@@ -163,14 +149,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(t.onOptionsItemSelected(item))
-            return true;
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onBackPressed() {
@@ -213,6 +192,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                     return;
                                 }
                                 addDeposit(-399);
+                                refreshWalletUI();
                                 Snackbar.make(view,"Pubg ID: 979349998",Snackbar.LENGTH_INDEFINITE).setAction("Copy", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {

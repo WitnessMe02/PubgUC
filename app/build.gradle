@@ -36,6 +36,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation('com.paytm:pgplussdk:1.2.3') {
+        transitive = true;
+    }
 
 
     implementation 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'

@@ -33,7 +33,7 @@ public class SplashActivity extends AwesomeSplash {
         //Choose LOGO OR PATH; if you don't provide String value for path it's logo by default
 
         //Customize Logo
-        configSplash.setLogoSplash(R.mipmap.ic_launcher); //or any other drawable
+        configSplash.setLogoSplash(R.drawable.logo); //or any other drawable
         configSplash.setAnimLogoSplashDuration(1500); //int ms
         configSplash.setAnimLogoSplashTechnique(Techniques.RotateIn); //choose one form Techniques (ref: https://github.com/daimajia/AndroidViewAnimations)
 
@@ -59,9 +59,11 @@ public class SplashActivity extends AwesomeSplash {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             startActivity(new Intent(this,MainActivity.class));
+            finish();
         } else {
             Intent intent = new Intent(this,AuthActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 }

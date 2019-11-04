@@ -14,6 +14,7 @@
         android:layout_marginTop="139dp"
         android:text="Rate Us and Earn 10 UC"
         android:textAllCaps="false"
+        android:enabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="31dp"
+        android:enabled="false"
         android:text="Subscribe Us and Earn 10 UC"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="31dp"
+        android:enabled="false"
         android:text="Watch Video and Earn 10 UC"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
